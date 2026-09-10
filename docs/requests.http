@@ -1,0 +1,99 @@
+# JSON Dataset Operators - REST Client requests
+# Works with the JetBrains HTTP Client and the VS Code "REST Client" extension.
+# Start the app first: ./mvnw spring-boot:run
+# Run the inserts before the queries; datasets exist only once they hold a record.
+
+@baseUrl = http://localhost:8080
+@datasetName = employee_dataset
+
+### Insert John Doe
+POST {{baseUrl}}/api/dataset/{{datasetName}}/record
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "John Doe",
+  "age": 30,
+  "department": "Engineering"
+}
+
+### Insert Jane Smith
+POST {{baseUrl}}/api/dataset/{{datasetName}}/record
+Content-Type: application/json
+
+{
+  "id": 2,
+  "name": "Jane Smith",
+  "age": 25,
+  "department": "Engineering"
+}
+
+### Insert Alice Brown
+POST {{baseUrl}}/api/dataset/{{datasetName}}/record
+Content-Type: application/json
+
+{
+  "id": 3,
+  "name": "Alice Brown",
+  "age": 28,
+  "department": "Marketing"
+}
+
+### Group by department
+GET {{baseUrl}}/api/dataset/{{datasetName}}/query?groupBy=department
+
+### Sort by age ascending
+GET {{baseUrl}}/api/dataset/{{datasetName}}/query?sortBy=age&order=asc
+
+### Sort by age descending
+GET {{baseUrl}}/api/dataset/{{datasetName}}/query?sortBy=age&order=desc
+
+### Group by department, sorted by age inside each group
+GET {{baseUrl}}/api/dataset/{{datasetName}}/query?groupBy=department&sortBy=age
+
+### Get record 1 (target of the Location header)
+GET {{baseUrl}}/api/dataset/{{datasetName}}/record/1
+
+### Error: no query params -> 400 application/problem+json
+GET {{baseUrl}}/api/dataset/{{datasetName}}/query
+
+### Error: duplicate insert -> 409
+POST {{baseUrl}}/api/dataset/{{datasetName}}/record
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "John Doe",
+  "age": 30,
+  "department": "Engineering"
+}
+
+### Error: invalid order -> 400
+GET {{baseUrl}}/api/dataset/{{datasetName}}/query?sortBy=age&order=sideways
+
+### Error: order without sortBy -> 400
+GET {{baseUrl}}/api/dataset/{{datasetName}}/query?groupBy=department&order=desc
+
+### Error: malformed JSON -> 400
+POST {{baseUrl}}/api/dataset/{{datasetName}}/record
+Content-Type: application/json
+
+{"id": 4, "name": "Broken"
+
+### Error: missing id -> 400
+POST {{baseUrl}}/api/dataset/{{datasetName}}/record
+Content-Type: application/json
+
+{
+  "name": "No Id",
+  "age": 40
+}
+
+### Error: unknown dataset -> 404
+GET {{baseUrl}}/api/dataset/no_such_dataset/query?groupBy=department
+
+### Error: record not found -> 404
+GET {{baseUrl}}/api/dataset/{{datasetName}}/record/999
+
+### Error: invalid dataset name -> 400
+GET {{baseUrl}}/api/dataset/bad%20name!/query?groupBy=department

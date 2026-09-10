@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/datasetops}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME:datasetops}
+    password: ${DB_PASSWORD:datasetops}
+  jpa:
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: false

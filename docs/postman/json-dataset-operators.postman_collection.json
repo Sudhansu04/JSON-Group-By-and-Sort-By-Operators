@@ -1,0 +1,642 @@
+{
+  "info": {
+    "_postman_id": "6b3e0c5a-2d7f-4b8e-9a1c-0f4d2e7b9c31",
+    "name": "JSON Dataset Operators",
+    "description": "Insert JSON records into a dataset and query them with groupBy / sortBy. Run the Insert folder first, then Query, then Errors. Variables: baseUrl, datasetName.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "datasetName",
+      "value": "employee_dataset",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Insert",
+      "item": [
+        {
+          "name": "Insert John Doe",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Body confirms insert\", () => {",
+                  "    pm.expect(json.message).to.eql(\"Record added successfully\");",
+                  "    pm.expect(json.dataset).to.eql(pm.environment.get(\"datasetName\") || pm.collectionVariables.get(\"datasetName\"));",
+                  "    pm.expect(json.recordId).to.eql(1);",
+                  "});",
+                  "pm.test(\"Location header present\", () => pm.response.to.have.header(\"Location\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"name\": \"John Doe\",\n  \"age\": 30,\n  \"department\": \"Engineering\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/dataset/{{datasetName}}/record",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dataset",
+                "{{datasetName}}",
+                "record"
+              ]
+            },
+            "description": "Insert one of the three example records from the assignment PDF."
+          }
+        },
+        {
+          "name": "Insert Jane Smith",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Body confirms insert\", () => {",
+                  "    pm.expect(json.message).to.eql(\"Record added successfully\");",
+                  "    pm.expect(json.dataset).to.eql(pm.environment.get(\"datasetName\") || pm.collectionVariables.get(\"datasetName\"));",
+                  "    pm.expect(json.recordId).to.eql(2);",
+                  "});",
+                  "pm.test(\"Location header present\", () => pm.response.to.have.header(\"Location\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 2,\n  \"name\": \"Jane Smith\",\n  \"age\": 25,\n  \"department\": \"Engineering\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/dataset/{{datasetName}}/record",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dataset",
+                "{{datasetName}}",
+                "record"
+              ]
+            },
+            "description": "Insert one of the three example records from the assignment PDF."
+          }
+        },
+        {
+          "name": "Insert Alice Brown",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Body confirms insert\", () => {",
+                  "    pm.expect(json.message).to.eql(\"Record added successfully\");",
+                  "    pm.expect(json.dataset).to.eql(pm.environment.get(\"datasetName\") || pm.collectionVariables.get(\"datasetName\"));",
+                  "    pm.expect(json.recordId).to.eql(3);",
+                  "});",
+                  "pm.test(\"Location header present\", () => pm.response.to.have.header(\"Location\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 3,\n  \"name\": \"Alice Brown\",\n  \"age\": 28,\n  \"department\": \"Marketing\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/dataset/{{datasetName}}/record",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dataset",
+                "{{datasetName}}",
+                "record"
+              ]
+            },
+            "description": "Insert one of the three example records from the assignment PDF."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Query",
+      "item": [
+        {
+          "name": "Group by department",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Has groupedRecords with Engineering and Marketing\", () => {",
+                  "    pm.expect(json).to.have.property(\"groupedRecords\");",
+                  "    pm.expect(json.groupedRecords).to.have.keys(\"Engineering\", \"Marketing\");",
+                  "    pm.expect(json.groupedRecords.Engineering).to.have.lengthOf(2);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dataset/{{datasetName}}/query?groupBy=department",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dataset",
+                "{{datasetName}}",
+                "query"
+              ],
+              "query": [
+                {
+                  "key": "groupBy",
+                  "value": "department"
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Sort by age asc",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "const ages = pm.response.json().sortedRecords.map(r => r.age);",
+                  "pm.test(\"Ages ascending\", () => pm.expect(ages).to.eql([...ages].sort((a, b) => a - b)));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dataset/{{datasetName}}/query?sortBy=age&order=asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dataset",
+                "{{datasetName}}",
+                "query"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "age"
+                },
+                {
+                  "key": "order",
+                  "value": "asc"
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Sort by age desc",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "const ages = pm.response.json().sortedRecords.map(r => r.age);",
+                  "pm.test(\"Ages descending\", () => pm.expect(ages).to.eql([...ages].sort((a, b) => b - a)));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dataset/{{datasetName}}/query?sortBy=age&order=desc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dataset",
+                "{{datasetName}}",
+                "query"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "age"
+                },
+                {
+                  "key": "order",
+                  "value": "desc"
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Group by department + sort by age",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "const groups = pm.response.json().groupedRecords;",
+                  "pm.test(\"Each group sorted by age ascending\", () => {",
+                  "    Object.values(groups).forEach(list => {",
+                  "        const ages = list.map(r => r.age);",
+                  "        pm.expect(ages).to.eql([...ages].sort((a, b) => a - b));",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dataset/{{datasetName}}/query?groupBy=department&sortBy=age",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dataset",
+                "{{datasetName}}",
+                "query"
+              ],
+              "query": [
+                {
+                  "key": "groupBy",
+                  "value": "department"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "age"
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Get record 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Returns John Doe\", () => pm.expect(pm.response.json().name).to.eql(\"John Doe\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dataset/{{datasetName}}/record/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dataset",
+                "{{datasetName}}",
+                "record",
+                "1"
+              ]
+            },
+            "description": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "Errors",
+      "item": [
+        {
+          "name": "Error: no query params",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Content-Type is application/problem+json\", () =>",
+                  "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/problem+json\"));",
+                  "pm.test(\"Problem body has title, detail and timestamp\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property(\"title\");",
+                  "    pm.expect(json).to.have.property(\"detail\");",
+                  "    pm.expect(json).to.have.property(\"timestamp\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dataset/{{datasetName}}/query",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dataset",
+                "{{datasetName}}",
+                "query"
+              ]
+            },
+            "description": "Neither groupBy nor sortBy supplied -> 400 Invalid query."
+          }
+        },
+        {
+          "name": "Error: duplicate insert",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 409\", () => pm.response.to.have.status(409));",
+                  "pm.test(\"Content-Type is application/problem+json\", () =>",
+                  "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/problem+json\"));",
+                  "pm.test(\"Problem body has title, detail and timestamp\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property(\"title\");",
+                  "    pm.expect(json).to.have.property(\"detail\");",
+                  "    pm.expect(json).to.have.property(\"timestamp\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"name\": \"John Doe\",\n  \"age\": 30,\n  \"department\": \"Engineering\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/dataset/{{datasetName}}/record",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dataset",
+                "{{datasetName}}",
+                "record"
+              ]
+            },
+            "description": "Re-inserting id 1 -> 409 Duplicate record. Run after 'Insert John Doe'."
+          }
+        },
+        {
+          "name": "Error: invalid order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Content-Type is application/problem+json\", () =>",
+                  "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/problem+json\"));",
+                  "pm.test(\"Problem body has title, detail and timestamp\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property(\"title\");",
+                  "    pm.expect(json).to.have.property(\"detail\");",
+                  "    pm.expect(json).to.have.property(\"timestamp\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dataset/{{datasetName}}/query?sortBy=age&order=sideways",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dataset",
+                "{{datasetName}}",
+                "query"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "age"
+                },
+                {
+                  "key": "order",
+                  "value": "sideways"
+                }
+              ]
+            },
+            "description": "order must be asc or desc (case-insensitive)."
+          }
+        },
+        {
+          "name": "Error: malformed JSON",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Content-Type is application/problem+json\", () =>",
+                  "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/problem+json\"));",
+                  "pm.test(\"Problem body has title, detail and timestamp\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property(\"title\");",
+                  "    pm.expect(json).to.have.property(\"detail\");",
+                  "    pm.expect(json).to.have.property(\"timestamp\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id\": 4, \"name\": \"Broken\"",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/dataset/{{datasetName}}/record",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dataset",
+                "{{datasetName}}",
+                "record"
+              ]
+            },
+            "description": "Unparseable body -> 400 from ResponseEntityExceptionHandler."
+          }
+        },
+        {
+          "name": "Error: unknown dataset",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"Content-Type is application/problem+json\", () =>",
+                  "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/problem+json\"));",
+                  "pm.test(\"Problem body has title, detail and timestamp\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property(\"title\");",
+                  "    pm.expect(json).to.have.property(\"detail\");",
+                  "    pm.expect(json).to.have.property(\"timestamp\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dataset/no_such_dataset/query?groupBy=department",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dataset",
+                "no_such_dataset",
+                "query"
+              ],
+              "query": [
+                {
+                  "key": "groupBy",
+                  "value": "department"
+                }
+              ]
+            },
+            "description": "Dataset without records -> 404 Dataset not found."
+          }
+        }
+      ]
+    }
+  ]
+}
